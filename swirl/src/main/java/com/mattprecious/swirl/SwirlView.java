@@ -3,13 +3,16 @@ package com.mattprecious.swirl;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-@TargetApi(Build.VERSION_CODES.M)
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public final class SwirlView extends ImageView {
   // Keep in sync with attrs.
   public enum State {
@@ -27,8 +30,8 @@ public final class SwirlView extends ImageView {
   public SwirlView(Context context, AttributeSet attrs) {
     super(context, attrs);
 
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-      throw new AssertionError("API 23 required.");
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+      throw new AssertionError("API 21 required.");
     }
 
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.swirl_Swirl);
@@ -46,22 +49,28 @@ public final class SwirlView extends ImageView {
   public void setState(State state, boolean animate) {
     if (state == this.state) return;
 
-    int resId = getDrawable(this.state, state, animate);
+    @DrawableRes int resId = getDrawable(this.state, state, animate);
     if (resId == 0) {
-      setImageResource(resId);
+      setImageDrawable(null);
     } else {
-      Drawable icon = getContext().getDrawable(resId);
+      Drawable icon = null;
+      if (animate) {
+        icon = AnimatedVectorDrawableCompat.create(getContext(), resId);
+      }
+      if (icon == null) {
+        icon = VectorDrawableCompat.create(getResources(), resId, getContext().getTheme());
+      }
       setImageDrawable(icon);
 
-      if (icon instanceof AnimatedVectorDrawable) {
-        ((AnimatedVectorDrawable) icon).start();
+      if (icon instanceof Animatable) {
+        ((Animatable) icon).start();
       }
     }
 
     this.state = state;
   }
 
-  private static int getDrawable(State currentState, State newState, boolean animate) {
+  @DrawableRes private static int getDrawable(State currentState, State newState, boolean animate) {
     switch (newState) {
       case OFF:
         if (animate) {
