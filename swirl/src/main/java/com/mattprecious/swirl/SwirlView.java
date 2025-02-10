@@ -6,9 +6,9 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
-import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
-import android.support.graphics.drawable.VectorDrawableCompat;
+import androidx.annotation.DrawableRes;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
@@ -75,9 +75,9 @@ public final class SwirlView extends ImageView {
       case OFF:
         if (animate) {
           if (currentState == State.ON) {
-            return R.drawable.swirl_draw_off_animation;
+            return R.drawable.swirl_fingerprint_draw_off_animation;
           } else if (currentState == State.ERROR) {
-            return R.drawable.swirl_error_off_animation;
+            return R.drawable.swirl_error_draw_off_animation;
           }
         }
 
@@ -85,9 +85,9 @@ public final class SwirlView extends ImageView {
       case ON:
         if (animate) {
           if (currentState == State.OFF) {
-            return R.drawable.swirl_draw_on_animation;
+            return R.drawable.swirl_fingerprint_draw_on_animation;
           } else if (currentState == State.ERROR) {
-            return R.drawable.swirl_error_state_to_fp_animation;
+            return R.drawable.swirl_fingerprint_error_state_to_fp_animation;
           }
         }
 
@@ -95,9 +95,9 @@ public final class SwirlView extends ImageView {
       case ERROR:
         if (animate) {
           if (currentState == State.ON) {
-            return R.drawable.swirl_fp_to_error_state_animation;
+            return R.drawable.swirl_fingerprint_fp_to_error_state_animation;
           } else if (currentState == State.OFF) {
-            return R.drawable.swirl_error_on_animation;
+            return R.drawable.swirl_error_draw_on_animation;
           }
         }
 
